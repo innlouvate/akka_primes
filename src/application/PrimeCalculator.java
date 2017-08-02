@@ -8,7 +8,7 @@ public class PrimeCalculator {
 
     public static void main(String[] args) {
         PrimeCalculator primeCalculator = new PrimeCalculator();
-        primeCalculator.calculate(1, 1000000);
+        primeCalculator.calculate(1, 10000);
     }
 
     public void calculate(int start, int end) {

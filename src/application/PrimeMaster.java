@@ -19,7 +19,7 @@ public class PrimeMaster extends UntypedActor {
     ArrayList<Routee> routees = new ArrayList<Routee>();
 
     public PrimeMaster(int numWorkers) {
-        numWorkers = numWorkers;
+        numberOfWorkers = numWorkers;
 
         for(int i=0; i<numberOfWorkers; i++) {
             ActorRef r = getContext().actorOf(Props.create(PrimeWorker.class));
@@ -47,6 +47,18 @@ public class PrimeMaster extends UntypedActor {
                 int send[] = { startNumber, endNumber };
                 workerRouter.route(send, getSelf());
             }
+        } else if(message instanceof ArrayList) {
+            ArrayList<Integer> result = (ArrayList<Integer>) message;
+            for(int n : result) {
+                System.out.println(n + ", ");
+            }
+            System.out.println();
+            if(++numberOfResults >= numberOfWorkers) {
+                getContext().stop(getSelf());
+                getContext().system().shutdown();
+            }
+        } else {
+            unhandled(message);
         }
     }
 }

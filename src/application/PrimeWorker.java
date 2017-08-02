@@ -1,14 +1,28 @@
 package application;
 
-public class PrimeWorker {
+import akka.actor.UntypedActor;
 
-    public static void main(String[] args) {
-        int start = 1;
-        int end = 100;
+import java.util.ArrayList;
 
-        for(int i = start; i <= end; i++)
-            if(isPrime(i))
-                System.out.println(i);
+public class PrimeWorker extends UntypedActor {
+
+    @Override
+    public void onReceive(Object message) throws Exception {
+        if(message instanceof int[]) {
+            int msg[] = (int[])message;
+            int start = msg[0];
+            int end = msg[1];
+
+            ArrayList<Integer> result = new ArrayList<Integer>();
+
+            for (int i = start; i <= end; i++)
+                if (isPrime(i))
+                    result.add(i);
+
+            getSender().tell(result, getSelf());
+        } else {
+            unhandled(message);
+        }
     }
 
     private static boolean isPrime(int n) {
@@ -24,5 +38,4 @@ public class PrimeWorker {
                 return false;
         return true;
     }
-
 }
